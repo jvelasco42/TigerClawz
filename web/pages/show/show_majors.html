@@ -1,0 +1,39 @@
+{% extends 'layouts/main.html' %}
+{% block title %}{{ major.name }} | Major{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-6">
+		<h1 class="monospace">
+			{{ major.name }}
+		</h1>
+		<p class="subtitle">
+			Department: {{ major.dept }}
+		</p>
+		<p>
+			<i class="fas fa-folder"></i> {{ major.core }}
+		</p>
+		<p>
+			<i class="fas fa-folder-plus"></i> {{ major.elec }}
+        </p>
+        <p>
+			<i class="fas fa-chalkboard"></i> {{ major.courses }}
+        </p>
+        <p>
+			<i class="fas fa-users"></i> {{ major.students }}
+        </p>
+        <p class="lead">App ID: {{ major.id }}</p>
+	</div>
+</div>
+
+<div class="row">
+	<form class="col-sm-6" action="/majors/edit" method="GET">
+		<input type="submit" value="Edit Major" class="btn btn-primary btn-lg">
+		<input type='text' name="major_id" value={{major.id}} style="display: none;">
+	</form>
+
+	<form class="col-sm-6" action="/majors/delete" method="POST">
+		<input type="submit" value="Delete Major" class="btn btn-primary btn-lg">
+		<input type='text' name="major_id" value={{major.id}} style="display: none;">
+	</form>
+</div>
+{% endblock %}

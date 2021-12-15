@@ -1,0 +1,26 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Edit Studnet{% endblock %}
+{% block content %}
+  <div class="form-wrapper">
+    <form class="form" method="post" action="/students/{{student.id}}/edit">
+      <h3 class="form-heading">Edit Student <em>{{ student.name }}</em></h3>
+      <div class="form-group">
+        <label for="stuId">Student ID</label>
+        {{ form.stuId(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        {{ form.name(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        {{ form.email(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="year">Year Level</label>
+        {{ form.year(class_ = 'form-control', placeholder='xx:xx-xx:xx', autofocus = true) }}
+      </div>
+      <input type="submit" value="Edit Student" class="btn btn-primary btn-lg btn-block">
+    </form>
+  </div>
+{% endblock %}

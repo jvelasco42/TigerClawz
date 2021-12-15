@@ -1,0 +1,33 @@
+{% extends 'layouts/main.html' %}
+{% block title %}{{ schedule.name }} | Schedule{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-6">
+		<h1 class="monospace">
+			{{ schedule.name }}
+		</h1>
+		<p class="subtitle">
+			Student: {{ schedule.student_id }}
+		</p>
+		<p>
+			<i class="fas fa-calendar-alt"></i> {{ schedule.semester }}
+		</p>
+        <p>
+			<i class="fas fa-chalkboard"></i> {{ schedule.courses }}
+        </p>
+        <p class="lead">App ID: {{ schedule.id }}</p>
+	</div>
+</div>
+
+<div class="row">
+	<form class="col-sm-6" action="/schedules/edit" method="GET">
+		<input type="submit" value="Edit Schedule" class="btn btn-primary btn-lg">
+		<input type='text' name="schedule_id" value={{schedule.id}} style="display: none;">
+	</form>
+
+	<form class="col-sm-6" action="/schedules/delete" method="POST">
+		<input type="submit" value="Delete Schedule" class="btn btn-primary btn-lg">
+		<input type='text' name="schedule_id" value={{schedule.id}} style="display: none;">
+	</form>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Edit Major{% endblock %}
+{% block content %}
+  <div class="form-wrapper">
+    <form class="form" method="post" action="/majors/{{major.id}}/edit">
+      <h3 class="form-heading">Edit Major <em>{{ major.name }}</em></h3>
+      <div class="form-group">
+        <label for="name">Name</label>
+        {{ form.name(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="dept">Department</label>
+        {{ form.dept(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="core">Required # Core Classes</label>
+        {{ form.core(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="elec">Required # Electives</label>
+        {{ form.elec(class_ = 'form-control', placeholder='xx:xx-xx:xx', autofocus = true) }}
+      </div>
+      <input type="submit" value="Edit Major" class="btn btn-primary btn-lg btn-block">
+    </form>
+  </div>
+{% endblock %}

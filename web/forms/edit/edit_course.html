@@ -1,0 +1,47 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Edit Course{% endblock %}
+{% block content %}
+  <div class="form-wrapper">
+    <form class="form" method="post" action="/courses/{{course.id}}/edit">
+      <h3 class="form-heading">Edit Course <em>{{ course.name }}</em></h3>
+      <div class="form-group">
+        <label for="courseNum">Course Number</label>
+        {{ form.courseNum(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="name">Course Name</label>
+        {{ form.name(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="hrs">Credit Hours</label>
+        {{ form.hrs(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="time">Time</label>
+        {{ form.time(class_ = 'form-control', placeholder='xx:xx-xx:xx', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="days">Day(s)</label>
+        <small>Ctrl+Click to select multiple</small>
+        {{ form.days(class_ = 'form-control', placeholder='Days, separated by commas', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="faculty">Faculty</label>
+        {{ form.faculty(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="dept">Department</label>
+        {{ form.dept(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="room">Room Number</label>
+        {{ form.room(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="isAvail">Availability</label>
+        {{ form.isAvail(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <input type="submit" value="Edit Course" class="btn btn-primary btn-lg btn-block">
+    </form>
+  </div>
+{% endblock %}

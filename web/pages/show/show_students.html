@@ -1,0 +1,39 @@
+{% extends 'layouts/main.html' %}
+{% block title %}{{ student.name }} | Student{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-6">
+		<h1 class="monospace">
+			{{ student.name }}
+		</h1>
+		<p class="subtitle">
+			ID: {{ student.stuId }}
+		</p>
+		<p>
+			<i class="fas fa-envelope"></i> {{ student.email }}
+		</p>
+		<p>
+			<i class="fas fa-user-graduate"></i> {{ student.year }}
+        </p>
+        <p>
+			<i class="fas fa-graduation-cap"></i> {{ student.majors }}
+        </p>
+        <p>
+			<i class="fas fa-th-list"></i> {{ student.schedules }}
+        </p>
+        <p class="lead">App ID: {{ student.id }}</p>
+	</div>
+</div>
+
+<div class="row">
+	<form class="col-sm-6" action="/students/edit" method="GET">
+		<input type="submit" value="Edit Student" class="btn btn-primary btn-lg">
+		<input type='text' name="student_id" value={{student.id}} style="display: none;">
+	</form>
+
+	<form class="col-sm-6" action="/students/delete" method="POST">
+		<input type="submit" value="Delete Student" class="btn btn-primary btn-lg">
+		<input type='text' name="student_id" value={{student.id}} style="display: none;">
+	</form>
+</div>
+{% endblock %}
