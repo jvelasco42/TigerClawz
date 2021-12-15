@@ -1,0 +1,89 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Fyyur{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-6">
+		<h1>Fyyur 🔥</h1>
+		<p class="lead">A place for students to plan their courses.</p>
+		<h3>
+			<a href="/courses"><button class="btn btn-primary btn-lg">Find a course</button></a>
+			<a href="/courses/create"><button class="btn btn-default btn-lg">Add a course</button></a>
+		</h3>
+		<h3>
+			<a href="/students"><button class="btn btn-primary btn-lg">Find a student</button></a>
+			<a href="/students/create"><button class="btn btn-default btn-lg">Add a student</button></a>
+		</h3>
+        <h3>
+			<a href="/majors"><button class="btn btn-primary btn-lg">Find a major</button></a>
+			<a href="/majors/create"><button class="btn btn-default btn-lg">Add a major</button></a>
+		</h3>
+		<p class="lead">Build a schedule to see all your courses together.</p>
+		<h3>
+            <a href="/schedules"><button class="btn btn-primary btn-lg">Find a schedule</button></a>
+			<a href="/schedules/create"><button class="btn btn-default btn-lg">Create a schedule</button></a>
+		</h3>
+	</div>
+</div>
+
+<section class="row">
+	<h3>Recent Listed Courses</h3>
+	<div class="row">
+	    {%for course in courses %}
+	    <div class="col-sm-4">
+	        <div class="tile">
+	        	<h4>{{ course.name }}</h4>
+                <h4>Course Number: {{ course.courseNum }}</h4>
+	        	<h4>App ID: {{ course.id }}</h4>
+	            <h5><a href="/courses/{{ course.id }}">{{ course.name }}</a></h5>
+	        </div>
+	    </div>
+	    {% endfor %}
+	</div>
+</section>
+
+<section class="row">
+	<h3>Recent Listed Students</h3>
+	<div class="row">
+	    {%for student in students %}
+	    <div class="col-sm-4">
+	        <div class="tile tile-show">
+	        	<h4>{{ student.name }}</h4>
+                <h4>Student ID: {{ student.stuId }}</h4>
+	        	<h4>App ID: {{ student.id }}</h4>
+	            <h5><a href="/students/{{ student.id }}">{{ student.name }}</a></h5>
+	        </div>
+	    </div>
+	    {% endfor %}
+	</div>
+</section>
+
+<section class="row">
+	<h3>Recent Listed Majors</h3>
+	<div class="row">
+	    {%for major in majors %}
+	    <div class="col-sm-4">
+	        <div class="tile tile-show">
+	        	<h4>{{ major.name }}</h4>
+	        	<h4>App ID: {{ major.id }}</h4>
+	            <h5><a href="/majors/{{ major.id }}">{{ major.name }}</a></h5>
+	        </div>
+	    </div>
+	    {% endfor %}
+	</div>
+</section>
+
+<section class="row">
+	<h3>Recent Listed Schedules</h3>
+	<div class="row">
+	    {%for schedule in schedules %}
+	    <div class="col-sm-4">
+	        <div class="tile tile-show">
+	        	<h4>{{ schedule.name }}</h4>
+	        	<h4>App ID: {{ schedule.id }}</h4>
+	            <h5><a href="/schedules/{{ schedule.id }}">{{ schedule.name }}</a></h5>
+	        </div>
+	    </div>
+	    {% endfor %}
+	</div>
+</section>
+{% endblock %}

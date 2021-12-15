@@ -1,0 +1,17 @@
+{% extends 'layouts/main.html' %}
+{% block title %}TigerClawz | Courses Search{% endblock %}
+{% block content %}
+<h3>Number of search results for "{{ search_term }}": {{ results.count }}</h3>
+<ul class="items">
+	{% for course in results.data %}
+	<li>
+		<a href="/courses/{{ course.id }}">
+			<i class="fas fa-chalkboard"></i>
+			<div class="item">
+				<h5>{{ course.name }}</h5>
+			</div>
+		</a>
+	</li>
+	{% endfor %}
+</ul>
+{% endblock %}

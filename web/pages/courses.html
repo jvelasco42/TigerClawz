@@ -1,0 +1,16 @@
+{% extends 'layouts/main.html' %}
+{% block title %}TigerClawz | Courses{% endblock %}
+{% block content %}
+<ul class="items">
+	{% for course in courses %}
+	<li>
+		<a href="/courses/{{ course.id }}">
+			<i class="fas fa-chalkboard"></i>
+			<div class="item">
+				<h5>{{ course.name }}</h5>
+			</div>
+		</a>
+	</li>
+	{% endfor %}
+</ul>
+{% endblock %}

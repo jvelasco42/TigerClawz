@@ -1,0 +1,16 @@
+{% extends 'layouts/main.html' %}
+{% block title %}TigerClawz | Schedules{% endblock %}
+{% block content %}
+<ul class="items">
+	{% for schedule in schedules %}
+	<li>
+		<a href="/schedules/{{ schedule.id }}">
+			<i class="fas fa-th-list"></i>
+			<div class="item">
+				<h5>{{ schedule.name }}</h5>
+			</div>
+		</a>
+	</li>
+	{% endfor %}
+</ul>
+{% endblock %}

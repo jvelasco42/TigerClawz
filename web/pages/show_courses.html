@@ -1,0 +1,77 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Course Search{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-6">
+		<h1 class="monospace">
+			{{ course.name }}
+		</h1>
+        <p class="subtitle">
+			Course Number: {{ course.courseNum }}
+		</p>
+		<p class="subtitle">
+			App ID: {{ course.id }}
+		</p>
+        <p>
+			<i class="fas fa-hashtag"></i> {{ course.hrs }}
+		</p>
+        <p>
+			<i class="fas fa-clock"></i> {{ course.time }}
+		</p>
+		<div class="days">
+			{% for day in course.days %}
+			<span class="day">{{ day }}</span>
+			{% endfor %}
+		</div>
+		<p>
+			<i class="fas fa-chalkboard-teacher"></i> {{ course.faculty }}
+		</p>
+        <p>
+			<i class="fas fa-book"></i> {{ course.dept }}
+		</p>
+        <p>
+			<i class="fas fa-building"></i> {{ course.room }}
+		</p>
+		{% if course.isAvail %}
+		<div class="available">
+			<p class="lead">Currently available for registration</p>
+		</div>
+		{% else %}	
+		<p class="not-available">
+			<i class="fas fa-calendar-times"></i> Not currently available
+		</p>
+		{% endif %}
+	</div>
+</div>
+<section>
+
+<div class="row">
+
+	<form class="col-sm-6" action="/courses/edit" method="GET">
+		<input type="submit" value="Edit Course" class="btn btn-primary btn-lg">
+		<input type='text' name="course_id" value={{course.id}} style="display: none;">
+	</form>
+
+	<form class="col-sm-6" action="/courses/delete" method="POST">
+		<input type="submit" value="Delete Course" class="btn btn-primary btn-lg">
+		<input type='text' name="course_id" value={{course.id}} style="display: none;">
+	</form>
+
+</div>
+
+
+<!--<button id="delete-btn" class="btn btn-primary btn-lg">Delete Course</button>-->
+
+<!-- try fetch request but doesn't work in rendering
+<script type="text/javascript">
+	deleteButton = document.getElementById('delete-btn');
+	courseId = {{ course.id }} ;
+	deleteButton.onclick = function(){
+		console.log(courseId);
+		fetch('/courses/' + courseId,{
+			method: 'DELETE'
+		});
+	}
+</script>
+-->
+{% endblock %}
