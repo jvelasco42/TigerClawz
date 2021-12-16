@@ -53,34 +53,57 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li>
-              {% if (request.endpoint == 'venues') or
-                (request.endpoint == 'search_venues') or
-                (request.endpoint == 'show_venue') %}
-              <form class="search" method="post" action="/venues/search">
+              {% if (request.endpoint == 'courses') or
+                (request.endpoint == 'search_courses') or
+                (request.endpoint == 'show_course') %}
+              <form class="search" method="post" action="/courses/search">
                 <input class="form-control"
                   type="search"
                   name="search_term"
-                  placeholder="Find a venue"
+                  placeholder="Find a course"
                   aria-label="Search">
               </form>
               {% endif %}
-              {% if (request.endpoint == 'artists') or
-                (request.endpoint == 'search_artists') or
-                (request.endpoint == 'show_artist') %}
-              <form class="search" method="post" action="/artists/search">
+              {% if (request.endpoint == 'students') or
+                (request.endpoint == 'search_students') or
+                (request.endpoint == 'show_student') %}
+              <form class="search" method="post" action="/students/search">
                 <input class="form-control"
                   type="search"
                   name="search_term"
-                  placeholder="Find an artist"
+                  placeholder="Find an student"
+                  aria-label="Search">
+              </form>
+              {% endif %}
+              {% if (request.endpoint == 'majors') or
+                (request.endpoint == 'search_majors') or
+                (request.endpoint == 'show_major') %}
+              <form class="search" method="post" action="/majors/search">
+                <input class="form-control"
+                  type="search"
+                  name="search_term"
+                  placeholder="Find a major"
+                  aria-label="Search">
+              </form>
+              {% endif %}
+              {% if (request.endpoint == 'schedules') or
+                (request.endpoint == 'search_schedules') or
+                (request.endpoint == 'show_schedule') %}
+              <form class="search" method="post" action="/schedules/search">
+                <input class="form-control"
+                  type="search"
+                  name="search_term"
+                  placeholder="Find a schedule"
                   aria-label="Search">
               </form>
               {% endif %}
             </li>
           </ul>
           <ul class="nav navbar-nav">
-            <li {% if request.endpoint == 'venues' %} class="active" {% endif %}><a href="{{ url_for('venues') }}">Venues</a></li>
-            <li {% if request.endpoint == 'artists' %} class="active" {% endif %}><a href="{{ url_for('artists') }}">Artists</a></li>
-            <li {% if request.endpoint == 'shows' %} class="active" {% endif %}><a href="{{ url_for('shows') }}">Shows</a></li>
+            <li {% if request.endpoint == 'courses' %} class="active" {% endif %}><a href="{{ url_for('courses') }}">Courses</a></li>
+            <li {% if request.endpoint == 'students' %} class="active" {% endif %}><a href="{{ url_for('students') }}">Students</a></li>
+            <li {% if request.endpoint == 'majors' %} class="active" {% endif %}><a href="{{ url_for('majors') }}">Majors</a></li>
+            <li {% if request.endpoint == 'schedules' %} class="active" {% endif %}><a href="{{ url_for('schedules') }}">Schedules</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

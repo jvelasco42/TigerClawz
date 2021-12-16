@@ -39,7 +39,7 @@ class Course(db.Model):
     isAvail = db.Column(db.Boolean, default = False)
 
     schedule_id = db.Column(db.Integer, db.ForeignKey('Schedule.id'), nullable=False)
-    countsFor = db.relationship("Major", secondary = db.course_fullfills_major, nullable=False)
+    # countsFor = db.relationship("Major", secondary = db.course_fullfills_major, nullable=False)
 
 class Student(db.Model):
     __tablename__ = 'Student'
@@ -49,7 +49,7 @@ class Student(db.Model):
     email = db.Column(db.String(50), nullable = False)
     year = db.Column(db.String(50), nullable = False)
 
-    majors = db.relationship("Major", secondary = db.students_major_in, nullable=False)
+    # majors = db.relationship("Major", secondary = db.students_major_in, nullable=False)
     schedules = db.relationship('Schedule',backref='student',lazy=True,
                         cascade="save-update, merge, delete")
 
@@ -61,8 +61,8 @@ class Major(db.Model):
     core = db.Column(db.Integer, nullable = False)
     elec = db.Column(db.Integer, nullable = False)
 
-    courses = db.relationship("Course", secondary = db.course_fullfills_major, nullable=False)
-    students = db.relationship("Student", secondary = db.students_major_in, nullable=False)
+    # courses = db.relationship("Course", secondary = db.course_fullfills_major, nullable=False)
+    # students = db.relationship("Student", secondary = db.students_major_in, nullable=False)
 
 class Schedule(db.Model):
     __tablename__ = 'Schedule'
@@ -74,15 +74,15 @@ class Schedule(db.Model):
     courses = db.relationship('Course',backref='schedule',lazy=True,
                         cascade="save-update, merge, delete")
 
-students_major_in = db.Table('Majors In', db.Model.metadata,
-    db.Column('student_id', db.Integer, db.ForeignKey('Student.id')),
-    db.Column('major_id', db.String(50), db.ForeignKey('Major.id'))
-)
+# students_major_in = db.Table('Majors In', db.Model.metadata,
+#     db.Column('student_id', db.Integer, db.ForeignKey('Student.id')),
+#     db.Column('major_id', db.String(50), db.ForeignKey('Major.id'))
+# )
 
-course_fullfills_major = db.Table('Fullfills', db.Model.metadata,
-    db.Column('course_id', db.String(50), db.ForeignKey('Course.id')),
-    db.Column('major_id', db.String(50), db.ForeignKey('Major.id'))
-)
+# course_fullfills_major = db.Table('Fullfills', db.Model.metadata,
+#     db.Column('course_id', db.String(50), db.ForeignKey('Course.id')),
+#     db.Column('major_id', db.String(50), db.ForeignKey('Major.id'))
+# )
 
 # Filters
 #----------------------------------------------------------------------------#
