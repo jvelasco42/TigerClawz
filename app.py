@@ -1,3 +1,4 @@
+from __future__ import annotations
 import sys
 import json
 import dateutil.parser
@@ -25,6 +26,16 @@ migration = Migrate(app, db)
 
 #Models
 
+students_major_in = db.Table('Majors In', db.Model.metadata,
+    db.Column('student_id', db.Integer, db.ForeignKey('Student.id')),
+    db.Column('major_id', db.Integer, db.ForeignKey('Major.id'))
+)
+
+course_fullfills_major = db.Table('Fullfills', db.Model.metadata,
+    db.Column('course_id', db.Integer, db.ForeignKey('Course.id')),
+    db.Column('major_id', db.Integer, db.ForeignKey('Major.id'))
+)
+
 class Course(db.Model):
     __tablename__ = 'Course'
     id = db.Column(db.Integer, primary_key=True)
@@ -36,10 +47,11 @@ class Course(db.Model):
     faculty = db.Column(db.String(50), nullable = False)
     dept = db.Column(db.String(50), nullable = False)
     room = db.Column(db.String(50), nullable = False)
-    isAvail = db.Column(db.Boolean, default = False)
+    isAvail = db.Column(db.Boolean, nullable = True)
 
-    schedule_id = db.Column(db.Integer, db.ForeignKey('Schedule.id'), nullable=False)
-    # countsFor = db.relationship("Major", secondary = db.course_fullfills_major, nullable=False)
+    schedule_id = db.Column(db.Integer, db.ForeignKey('Schedule.id'), nullable=True)
+    schedule:Schedule
+    countsFor = db.relationship("Major", secondary = course_fullfills_major, back_populates = "courses")
 
 class Student(db.Model):
     __tablename__ = 'Student'
@@ -49,8 +61,8 @@ class Student(db.Model):
     email = db.Column(db.String(50), nullable = False)
     year = db.Column(db.String(50), nullable = False)
 
-    # majors = db.relationship("Major", secondary = db.students_major_in, nullable=False)
-    schedules = db.relationship('Schedule',backref='student',lazy=True,
+    majors = db.relationship("Major", secondary = students_major_in, back_populates = "students")
+    schedules = db.relationship('Schedule', backref='student',lazy=True,
                         cascade="save-update, merge, delete")
 
 class Major(db.Model):
@@ -61,28 +73,19 @@ class Major(db.Model):
     core = db.Column(db.Integer, nullable = False)
     elec = db.Column(db.Integer, nullable = False)
 
-    # courses = db.relationship("Course", secondary = db.course_fullfills_major, nullable=False)
-    # students = db.relationship("Student", secondary = db.students_major_in, nullable=False)
+    courses = db.relationship("Course", secondary = course_fullfills_major, back_populates = "countsFor")
+    students = db.relationship("Student", secondary = students_major_in, back_populates = "majors")
 
 class Schedule(db.Model):
     __tablename__ = 'Schedule'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable = True)
+    name = db.Column(db.String(50), nullable = False)
     semester = db.Column(db.String(50), nullable = False)
     
-    student_id = db.Column(db.Integer, db.ForeignKey('Student.id'), nullable=False)
-    courses = db.relationship('Course',backref='schedule',lazy=True,
+    student_id = db.Column(db.Integer, db.ForeignKey('Student.id'), nullable=True)
+    student:Student
+    courses = db.relationship('Course', backref='schedule',lazy=True,
                         cascade="save-update, merge, delete")
-
-# students_major_in = db.Table('Majors In', db.Model.metadata,
-#     db.Column('student_id', db.Integer, db.ForeignKey('Student.id')),
-#     db.Column('major_id', db.String(50), db.ForeignKey('Major.id'))
-# )
-
-# course_fullfills_major = db.Table('Fullfills', db.Model.metadata,
-#     db.Column('course_id', db.String(50), db.ForeignKey('Course.id')),
-#     db.Column('major_id', db.String(50), db.ForeignKey('Major.id'))
-# )
 
 # Filters
 #----------------------------------------------------------------------------#
@@ -115,7 +118,7 @@ def index():
 @app.route('/courses')
 def courses():
     data= Course.query.with_entities(Course.id, Course.name).all()
-    return render_template('pages/course.html', course=data)
+    return render_template('pages/courses.html', course=data)
 
 @app.route('/courses/search', methods=['POST'])
 def search_courses():
@@ -146,9 +149,10 @@ def show_course(course_id):
         "faculty": course.faculty,
         "dept": course.dept,
         "room": course.room,
+        "countsFor": course.countsFor,
         "isAvail": course.isAvail
     }
-    return render_template('pages/show_course.html', course=data)
+    return render_template('pages/show_courses.html', course=data)
 
 #Create Course
 @app.route('/courses/create', methods=['GET'])
@@ -167,7 +171,13 @@ def create_course_submission():
     new_course.faculty = request.form['faculty']
     new_course.dept = request.form['dept']
     new_course.room = request.form['room']
-    new_course.isAvail = request.form['isAvail']
+    majors = db.session.query(Major).filter(Major.name == request.form['countsFor']).one_or_none()
+    if majors != None: 
+        new_course.countsFor.append(majors)  
+    if request.form['isAvail'] == 'y': 
+        new_course.isAvail = True
+    else: new_course.isAvail = False
+
     try:
         db.session.add(new_course)
         db.session.commit()
@@ -176,6 +186,7 @@ def create_course_submission():
         db.session.rollback()
         flash('An error occurred. Course ' + request.form['name'] + ' could not be listed.')
         db.session.close()
+        raise
     return redirect(url_for('index'))
 
 #Delete Course
@@ -212,6 +223,7 @@ def edit_course():
         "faculty": course.faculty,
         "dept": course.dept,
         "room": course.room,
+        "countsFor": course.countsFor,
         "isAvail": course.isAvail
     }
     return render_template('forms/edit_course.html', form=form, course=course_info)
@@ -228,7 +240,12 @@ def edit_course_submission(course_id):
     course.faculty = request.form['faculty']
     course.dept = request.form['dept']
     course.room = request.form['room']
-    course.isAvail = request.form['isAvail']
+    majors = db.session.query(Major).filter(Major.name == request.form['countsFor']).one_or_none()
+    if majors != None: 
+        course.countsFor.append(majors) 
+    if request.form['isAvail'] == 'y': 
+        course.isAvail = True
+    else: course.isAvail = False
 
     try:
         db.session.commit()
@@ -247,7 +264,7 @@ def edit_course_submission(course_id):
 @app.route('/students')
 def students():
     data= Student.query.with_entities(Student.id, Student.name).all()
-    return render_template('pages/student.html', student=data)
+    return render_template('pages/students.html', student=data)
 
 @app.route('/students/search', methods=['POST'])
 def search_students():
@@ -273,9 +290,11 @@ def show_student(student_id):
         "name": student.name,
         "stuId": student.stuId,
         "email": student.email,
-        "year": student.year
+        "year": student.year,
+        "majors": student.majors,
+        "schedules": student.schedules 
     }
-    return render_template('pages/show_student.html', student=data)
+    return render_template('pages/show_students.html', student=data)
 
 #Create Student
 @app.route('/students/create', methods=['GET'])
@@ -290,6 +309,10 @@ def create_student_submission():
     new_student.stuId = request.form['stuId']
     new_student.email = request.form['email']
     new_student.year = request.form['year']
+    new_student.majors.append(db.session.query(Major).filter(Major.name == request.form['majors']).one())
+    newSchedule = db.session.query(Schedule).filter(Schedule.name == request.form['schedules']).one_or_none()
+    if newSchedule != None: 
+        new_student.schedules.append(newSchedule)  
     try:
         db.session.add(new_student)
         db.session.commit()
@@ -329,7 +352,9 @@ def edit_student():
         "name": student.name,
         "stuId": student.stuId,
         "email": student.email,
-        "year": student.year
+        "year": student.year,
+        "majors": student.majors,
+        "schedules": student.schedules 
     }
     return render_template('forms/edit_student.html', form=form, student=student_info)
 
@@ -341,6 +366,10 @@ def edit_student_submission(student_id):
     student.stuId = request.form['stuId']
     student.email = request.form['email']
     student.year = request.form['year']
+    student.majors.append(db.session.query(Major).filter(Major.name == request.form['majors']).one())
+    newSchedule = db.session.query(Schedule).filter(Schedule.name == request.form['schedules']).one_or_none()
+    if newSchedule != None: 
+        student.schedules.append(newSchedule)  
 
     try:
         db.session.commit()
@@ -359,7 +388,7 @@ def edit_student_submission(student_id):
 @app.route('/majors')
 def majors():
     data= Major.query.with_entities(Major.id, Major.name).all()
-    return render_template('pages/major.html', major=data)
+    return render_template('pages/majors.html', major=data)
 
 @app.route('/majors/search', methods=['POST'])
 def search_majors():
@@ -385,9 +414,11 @@ def show_major(major_id):
         "name": major.name,
         "dept": major.dept,
         "core": major.core,
-        "elec": major.elec
+        "elec": major.elec,
+        "courses": major.courses,
+        "students": major.students
     }
-    return render_template('pages/show_major.html', major=data)
+    return render_template('pages/show_majors.html', major=data)
 
 #Create Major
 @app.route('/majors/create', methods=['GET'])
@@ -471,7 +502,7 @@ def edit_major_submission(major_id):
 @app.route('/schedules')
 def schedules():
     data= Schedule.query.with_entities(Schedule.id, Schedule.name).all()
-    return render_template('pages/schedule.html', schedule=data)
+    return render_template('pages/schedules.html', schedule=data)
 
 @app.route('/schedules/search', methods=['POST'])
 def search_schedules():
@@ -495,9 +526,10 @@ def show_schedule(schedule_id):
     data={
         "id": schedule.id,
         "name": schedule.name,
-        "semester": schedule.semester
+        "semester": schedule.semester,
+        "courses": schedule.courses
     }
-    return render_template('pages/show_schedule.html', schedule=data)
+    return render_template('pages/show_schedules.html', schedule=data)
 
 #Create Schedule
 @app.route('/schedules/create', methods=['GET'])
@@ -510,6 +542,8 @@ def create_schedule_submission():
     new_schedule = Schedule()
     new_schedule.name = request.form['name']
     new_schedule.semester = request.form['semester']
+    for name in request.form['courses'].split(', '):
+        new_schedule.courses.append(db.session.query(Course).filter(Course.name == name).one())
     try:
         db.session.add(new_schedule)
         db.session.commit()
@@ -547,7 +581,8 @@ def edit_schedule():
     schedule_info={
         "id": schedule.id,
         "name": schedule.name,
-        "semester": schedule.semester
+        "semester": schedule.semester,
+        "courses": schedule.courses
     }
     return render_template('forms/edit_schedule.html', form=form, schedule=schedule_info)
 
@@ -557,6 +592,8 @@ def edit_schedule_submission(schedule_id):
     schedule = Schedule.query.get(schedule_id)
     schedule.name = request.form['name']
     schedule.semester = request.form['semester']
+    for name in request.form['courses'].split(', '):
+        schedule.courses.append(db.session.query(Course).filter(Course.name == name).one())
 
     try:
         db.session.commit()
@@ -581,6 +618,7 @@ def server_error(error):
     return render_template('errors/500.html'), 500
 
 with app.app_context():
+    db.drop_all()
     db.create_all()
     db.session.commit()
 

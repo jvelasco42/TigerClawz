@@ -21,9 +21,8 @@
         {{ form.time(class_ = 'form-control', placeholder='xx:xx-xx:xx', autofocus = true) }}
       </div>
       <div class="form-group">
-        <label for="days">Day(s)</label>
-        <small>Ctrl+Click to select multiple</small>
-        {{ form.days(class_ = 'form-control', placeholder='Days, separated by commas', autofocus = true) }}
+        <label for="days">Days</label>
+        {{ form.days(class_ = 'form-control', autofocus = true) }}
       </div>
       <div class="form-group">
         <label for="faculty">Faculty</label>
@@ -36,6 +35,10 @@
       <div class="form-group">
         <label for="room">Room Number</label>
         {{ form.room(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="countsFor">Major(s)</label>
+        {{ form.countsFor(class_ = 'form-control', autofocus = true) }}
       </div>
       <div class="form-group">
         <label for="isAvail">Availability</label>

@@ -5,6 +5,7 @@ from wtforms.fields.datetime import TimeField
 from wtforms.fields.numeric import IntegerField
 from wtforms.fields.simple import BooleanField
 from wtforms.validators import DataRequired, AnyOf, URL
+from db import db
 
 class CourseForm(Form):
     schedule_id = StringField(
@@ -22,15 +23,8 @@ class CourseForm(Form):
     time = TimeField(
         'time', validators=[DataRequired()]
     )
-    days = SelectMultipleField(
-        'days', validators=[DataRequired()],
-        choices=[
-            ('M', 'Monday'),
-            ('T', 'Tuesday'),
-            ('W', 'Wednesday'),
-            ('R', 'Thursday'),
-            ('F', 'Friday'),
-        ]
+    days = StringField(
+        'days', validators=[DataRequired()]
     )
     faculty = StringField(
         'faculty', validators=[DataRequired()]
@@ -40,6 +34,9 @@ class CourseForm(Form):
     )
     room = StringField(
         'room', validators=[DataRequired()]
+    )
+    countsFor = StringField(
+        'countsFor', validators=[DataRequired()]
     )
     isAvail = BooleanField(
         'isAvail', validators=[DataRequired()]
@@ -57,6 +54,12 @@ class StudentForm(Form):
     )
     year = StringField(
         'year', validators=[DataRequired()]
+    )
+    majors = StringField(
+        'majors', validators=[DataRequired()]
+    )
+    schedules = StringField(
+        'schedules', validators=[DataRequired()]
     )
 
 class MajorForm(Form):
@@ -82,4 +85,7 @@ class ScheduleForm(Form):
     )
     semester = StringField(
         'semester', validators=[DataRequired()]
+    )
+    courses = StringField(
+        'courses', validators=[DataRequired()]
     )

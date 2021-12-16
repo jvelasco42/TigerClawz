@@ -16,10 +16,16 @@
 			<i class="fas fa-folder-plus"></i> {{ major.elec }}
         </p>
         <p>
-			<i class="fas fa-chalkboard"></i> {{ major.courses }}
+			<i class="fas fa-chalkboard"></i> 
+            {% for course in major.courses %}
+			<span class="course">{{ course.name }}</span>
+			{% endfor %}
         </p>
         <p>
-			<i class="fas fa-users"></i> {{ major.students }}
+			<i class="fas fa-users"></i>
+            {% for student in major.students %}
+			<span class="student">{{ student.name }}</span>
+			{% endfor %}
         </p>
         <p class="lead">App ID: {{ major.id }}</p>
 	</div>

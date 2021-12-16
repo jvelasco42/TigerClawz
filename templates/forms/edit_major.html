@@ -1,9 +1,9 @@
 {% extends 'layouts/main.html' %}
-{% block title %}New Major{% endblock %}
+{% block title %}Edit Major{% endblock %}
 {% block content %}
   <div class="form-wrapper">
-    <form method="post" class="form">
-      <h3 class="form-heading">List a new major <a href="{{ url_for('index') }}" title="Back to homepage"><i class="fa fa-home pull-right"></i></a></h3>
+    <form class="form" method="post" action="/majors/{{major.id}}/edit">
+      <h3 class="form-heading">Edit Major <em>{{ major.name }}</em></h3>
       <div class="form-group">
         <label for="name">Name</label>
         {{ form.name(class_ = 'form-control', autofocus = true) }}
@@ -18,9 +18,9 @@
       </div>
       <div class="form-group">
         <label for="elec">Required # Electives</label>
-        {{ form.elec(class_ = 'form-control', placeholder='xx:xx-xx:xx', autofocus = true) }}
+        {{ form.elec(class_ = 'form-control', autofocus = true) }}
       </div>
-      <input type="submit" value="Create Major" class="btn btn-primary btn-lg btn-block">
+      <input type="submit" value="Edit Major" class="btn btn-primary btn-lg btn-block">
     </form>
   </div>
 {% endblock %}

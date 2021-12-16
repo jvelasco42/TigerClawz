@@ -13,7 +13,10 @@
 			<i class="fas fa-calendar-alt"></i> {{ schedule.semester }}
 		</p>
         <p>
-			<i class="fas fa-chalkboard"></i> {{ schedule.courses }}
+			<i class="fas fa-chalkboard"></i> 
+            {% for course in schedule.courses %}
+			<span class="course">{{ course.name }}, {{ course.days }}, {{ course.time }} <br></span>
+			{% endfor %}
         </p>
         <p class="lead">App ID: {{ schedule.id }}</p>
 	</div>

@@ -16,10 +16,16 @@
 			<i class="fas fa-user-graduate"></i> {{ student.year }}
         </p>
         <p>
-			<i class="fas fa-graduation-cap"></i> {{ student.majors }}
+			<i class="fas fa-graduation-cap"></i> 
+            {% for major in student.majors %}
+			<span class="major">{{ major.name }}</span>
+			{% endfor %}
         </p>
         <p>
-			<i class="fas fa-th-list"></i> {{ student.schedules }}
+			<i class="fas fa-th-list"></i> 
+            {% for schedule in student.schedules %}
+			<span class="schedule">{{ schedule.name }}</span>
+			{% endfor %}
         </p>
         <p class="lead">App ID: {{ student.id }}</p>
 	</div>
